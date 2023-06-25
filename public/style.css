@@ -1,0 +1,53 @@
+
+#logo {
+    height: 75px;
+    width: auto;
+}
+
+nav {
+    background-color: black;
+
+}
+
+.spinner {
+    height: 75px;
+    width: 75px;
+}
+
+
+#game_form {
+    display: none;
+}
+
+body {
+    height: 100vh;
+    color: white;
+    background: linear-gradient(90deg,#6328ab 4.86%,#ffa58b 96.11%);
+}
+
+form {
+    width: 50vw;
+}
+
+.modal > * {
+    color: black;
+}
+
+.titanic {
+    float: none;
+}
+
+header {
+}
+
+section {
+    flex: 1;
+}
+
+footer {
+}
+
+
+.modal-title {
+    color: black;
+}

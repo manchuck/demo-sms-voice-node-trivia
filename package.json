@@ -1,0 +1,41 @@
+{
+  "name": "@vonage/wwtbav",
+  "private": true,
+  "description": "Who wants to be a Vonage Millionare",
+  "license": "Apache-2.0",
+  "author": "Chuck \"MANCHUCK\" Reeves <chuck@manchuck.com>",
+  "main": "index.js",
+  "scripts": {
+    "lint": "node_modules/.bin/eslint src/ public/js",
+    "lint:fix": "npm run lint -- --fix",
+    "prettier": "prettier src/**/*.{js}",
+    "prettier:fix": "prettier -w src/**/*.{js} src/**/__tests__/**/*.{js}",
+    "start": "node src/server.js",
+    "watch": "nodemon --watch src --watch views --watch public -e js,ejs,css,html --exec node -- src/server.js",
+    "livereload": "livereload -ee 'js,ejs' -d . "
+  },
+  "type": "module",
+  "dependencies": {
+    "@koa/router": "12.0.0",
+    "@vonage/auth": "1.4.0",
+    "@vonage/messages": "1.6.0",
+    "@vonage/server-sdk": "3.6.0",
+    "@vonage/voice": "1.5.0",
+    "airtable": "0.12.1",
+    "debug": "4.3.4",
+    "dotenv": "16.3.1",
+    "ejs": "3.1.9",
+    "express": "4.18.2",
+    "json-parse-better-errors": "1.0.2",
+    "lodash": "4.17.21",
+    "openai": "3.3.0"
+  },
+  "devDependencies": {
+    "eslint": "8.43.0",
+    "eslint-config-google": "0.14.0",
+    "eslint-plugin-deprecation": "1.4.1",
+    "eslint-plugin-lodash": "7.4.0",
+    "eslint-plugin-prettier": "4.2.1",
+    "open": "9.1.0"
+  }
+}

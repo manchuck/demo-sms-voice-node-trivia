@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <link rel="stylesheet" href="style.css"/>
+
+  <title>Who wants to be a Vonage Millionaire</title>
+</head>
+
+<body class="d-flex flex-column">
+
+  <nav class="navbar navbar-expand-lg" >
+    <div class="container-fluid">
+      <img class="navbar-brand" id="logo" src="img/VonageLogo_Primary_White.png" alt="vonage">
+      <ul class="navbar-nav bg-body-tertiary me-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Controls
+            </a>
+          <ul class="dropdown-menu">
+            <li><button class="dropdown-item create-game">Create Game</button></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><button class="dropdown-item find-player btn btn-info">Find Player</button></li>
+            <li><button class="dropdown-item call-player btn btn-info">Call Player</button></li>
+            <li><button class="dropdown-item ask btn btn-info">Ask</button></li>
+            <li><button class="dropdown-item pass btn btn-info">Pass</button></li>
+          </ul>
+        </li>
+        </ul>
+    </div>
+  </nav>
+
+  <button type="button" class="d-none" id="open_call" data-bs-toggle="modal" data-bs-target="#call"></button>
+
+  <button type="button" class="d-none" id="open_modal" data-bs-toggle="modal" data-bs-target="#tta_status"></button>
+
+  <section id="game_list_section" class="p-4 container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Game ID</th>
+          <th colspan="2">Title</th>
+        <tr>
+      </thead>
+
+      <tbody>
+      </tbody>
+
+    </table>
+  </section>
+
+  <section id="game_form_section" class="d-none container p-2">
+    <h2>Game Settings</h2>
+
+    <form name="game_settings">
+      <div class="mb-3">
+        <label for="game_title">Title:</label>
+        <input type="text" name="title" required id="game_title"/>
+      </div>
+
+      <div class="mb-3">
+        <fieldset name="form_categories">
+          <legend>Categories:</legend>
+
+          <div class="input-group mb-3">
+            <input type="text" name='categories' required class="form-control" placeholder="Category"/>
+            <button class="add-category input-group-text btn-success btn"> + </button>
+          </div>
+
+        </fieldset>
+      </div>
+
+      </br>
+      <button type="submit" class="submit-new-game btn btn-primary">Create</button>
+    </form>
+  </section>
+
+  <section id="game" class="container-fluid p-4">
+
+  </section>
+
+  <div id="tta_status" class="modal fade modal-lg">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          Calling
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <table class="table" id="numbers_table">
+            <thead>
+              <tr>
+                <th>Country</th>
+                <th>Number</th>
+              <tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+
+          </table>
+
+          <div id="audience_profiles">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Complete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="call" class="modal fade modal-lg">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h3>Call</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <h4 id="caller_name"></h4>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="start-call btn btn-primary"><i class="bi bi-telephone-outbound"></i>Dial</button>
+          <button type="button" class="end-call btn btn-danger">End Call</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <template id="game_row">
+    <tr class="game-row">
+      <td class="game-id">Game 1</td>
+      <td class="game-title">Game Title</td>
+      <td class="game-links"><a class="btn btn-primary" href="">Play</a></td>
+    </tr>
+  </template>
+
+  <div id="tta_status" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <table class="table" id="numbers_table">
+            <thead>
+              <tr>
+                <th>Country</th>
+                <th>Number</th>
+              <tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+
+          </table>
+
+          <div id="audience_profiles">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Complete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <template id="game_row">
+    <tr class="game-row">
+      <td class="game-id">Game 1</td>
+      <td class="game-title">Game Title</td>
+      <td class="game-links"><a class="btn btn-primary" href="">Play</a></td>
+    </tr>
+  </template>
+
+  <template id="toast_template">
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto">Bootstrap</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        Hello, world! This is a toast message.
+      </div>
+    </div>
+  </template>
+
+  <template id="game_template">
+    <div class="row">
+        <h2 class="player-name">Player: </h2>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-2 text-center">
+        <h4>Score</h4>
+
+        <ul id="score_section" class="list-group shadow-lg">
+        </ul>
+      </div>
+
+      <div class="col-sm-7" id="question_section">
+        <div class="row">
+          <div class="row text-center p-2 ">
+            <h1 id="question">What is the meaning of life?</h1>
+          </div>
+        </div>
+
+
+        <div class="row" id="choices_section">
+          <div class="row p-3">
+            <div class="col-sm-6 d-grid">
+              <button class="choice btn btn-secondary">42</button>
+            </div>
+            <div class="col-sm-6 d-grid">
+              <button class="choice btn btn-secondary">To find the TV remote</button>
+            </div>
+          </div>
+
+          <div class="row p-3">
+            <div class="col-sm-6 d-grid">
+              <button class="choice btn btn-secondary">Be Excellent to each other</button>
+            </div>
+            <div class="col-sm-6 d-grid">
+              <button class="choice btn btn-secondary">To Confuse Philosophers</button>
+            </div>
+          </div>
+
+          <div class="row p-3">
+            <div class="col-sm-12 d-grid">
+              <button class="answer btn btn-success" disabled>Answer</button>
+            </div>
+          </div>
+
+          <div class="row p-3">
+            <div class="col-sm-12 d-grid">
+              <button class="ask btn btn-info">Ask Question</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-3" id="helpline_section">
+        <h4 class="text-center">Helplines</h4>
+
+        <div class="col-sm-12 d-grid gap-2 text-center">
+          <button class="helpline dad btn btn-light">Dial-a-Dev</button>
+          <button class="helpline tta btn btn-light">Text the Audience</button>
+          <button class="helpline nid btn btn-light">Narrow it Down</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script type="module" src="https://unpkg.com/nexmo-client@latest/dist/nexmoClient.js?module"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] +
+    ':35729/livereload.js?snipver=1"></' + 'script>')
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
