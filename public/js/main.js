@@ -126,8 +126,6 @@ const fetchGame = async (gameId) => {
       const game = await res.json();
       console.log('Game fetched', game);
       window.currentGame = game;
-      displayQuestion();
-
       return game;
     })
     .catch((error) => {
@@ -266,6 +264,14 @@ const selectChoice = (event) => {
 };
 
 const displayQuestion = () => {
+  clearQuestion();
+  document.querySelector('.question-section')
+    .appendChild(buildQuestionElement());
+
+  getAskButton().classList.add('d-none');
+};
+
+const buildQuestionElement = () => {
   const question = getLatestQuestion();
 
   console.log('Displaying question', question);
@@ -275,16 +281,26 @@ const displayQuestion = () => {
     return;
   }
 
-  getAskButton().classList.add('d-none');
+  const questionTemplate = document.getElementById('question_template');
+  console.log(questionTemplate);
+  const questionElement = questionTemplate.content.cloneNode(true);
+
+  questionElement
+    .querySelector('* .question-text')
+    .innerText = question.question;
+
+
+  const choices = questionElement.querySelectorAll('button.choice');
+  console.log(choices);
+
+  //  getAskButton().classList.add('d-none');
   const totalRespondants = question.choices.reduce(
     (acc, { audience_choice: audienceChoice }) => acc + audienceChoice,
     0,
   );
 
   console.log(`Total respondands ${totalRespondants}`);
-  getQuestionElement().innerText = question.question;
-
-  for (const [index, element] of getChoiceButtons().entries()) {
+  for (const [index, element] of choices.entries()) {
     const choice = getLatestQuestion()?.choices[index];
     element.innerHTML = buildChoiceText(choice, totalRespondants);
     element.disabled = choice.removed;
@@ -300,14 +316,12 @@ const displayQuestion = () => {
       element.classList.add('correct');
     }
   }
-
-  getChoicesSection().classList.remove('d-none');
+  return questionElement;
 };
 
 const clearQuestion = () => {
   console.log('Clear Question');
-  getChoicesSection().classList.add('d-none');
-  getQuestionElement().innerText = 'Ask a Question';
+  document.querySelector('.question-section').innerText = '';
 };
 
 const showSpinner = (text) => {
@@ -420,12 +434,13 @@ const playGame = async (gameId) => {
   const gameTemplate = document.getElementById('game_template');
   const gameClone = gameTemplate.content.cloneNode(true);
 
-  getGameSection().appendChild(gameClone);
   const game = await fetchGame(gameId);
 
+  getGameSection().appendChild(gameClone);
   getGamePlayer().innerText = `Player: ${game?.player?.name || ''}`;
-  displayQuestion();
   displayScore();
+  displayQuestion();
+  dialADev();
 };
 
 const narrowItDown = () => {
@@ -438,7 +453,8 @@ const narrowItDown = () => {
 const setupPhoneCall = async (calling) => {
   const { jwt } = getCurrentGame();
   getCallerElement().innerText = calling.name;
-  window.app = await new NexmoClient({ debug: true })
+  // eslint-disable-next-line
+  window.app = await new NexmoClient()
     .createSession(jwt);
 
   window.calling = calling;
@@ -450,15 +466,40 @@ const setupPhoneCall = async (calling) => {
 const dialADev = async () => {
   console.log('Dial a Dev');
   await makeRPCCall('life_line', { which: 'phone_a_dev' });
-  const { jwt } = getCurrentGame();
-  console.log(`JWT token ${jwt}`);
-
-  const { dad } = getCurrentGame();
-  console.log(dad);
   document.getElementById('open_dial_a_dev').click();
 
-  console.log(getCallerElement());
-  getCallerElement().innerText = dad.name;
+  const dialADevElement = document.getElementById('dial_a_dev');
+  dialADevElement.querySelector('#dial_a_dev_body').innerHTML ='';
+  const { jwt, dad } = getCurrentGame();
+
+  console.log(`JWT token ${jwt}`);
+  console.log('Dad: ', dad);
+
+  const questionElement = buildQuestionElement();
+
+  questionElement.querySelector('button.ask').classList.add('d-none');
+  questionElement.querySelector('button.answer').classList.add('d-none');
+
+  const choices = questionElement.querySelectorAll('button.choice');
+
+  // eslint-disable-next-line
+  for (const [index, element] of choices.entries()) {
+    element.classList.remove(
+      'selected-choice',
+      'btn-info',
+      'btn-danger',
+      'btn-success',
+      'choice',
+    );
+    element.disabled = true;
+  }
+
+  dialADevElement
+    .querySelector('.dad-title').innerText = `Dial A Dev: ${dad.name}`;
+
+  dialADevElement.querySelector('#dial_a_dev_body')
+    .appendChild(questionElement);
+
   setupPhoneCall(dad);
 };
 
@@ -630,7 +671,7 @@ const pollAudienceStatus = () => {
     1000,
   );
   document.getElementById('open_tta').click();
-  document.getElementById('tta_status')
+  document.getElementById('tta')
     .addEventListener('hide.bs.modal', () => {
       console.log('Modal closing');
       clearInterval(window.audiencePollId);

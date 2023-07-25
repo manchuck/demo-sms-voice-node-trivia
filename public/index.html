@@ -37,7 +37,7 @@
 
   <button type="button" class="d-none" id="open_call" data-bs-toggle="modal" data-bs-target="#call"></button>
 
-  <button type="button" class="d-none" id="open_tta" data-bs-toggle="modal" data-bs-target="#tta_status"></button>
+  <button type="button" class="d-none" id="open_tta" data-bs-toggle="modal" data-bs-target="#tta"></button>
 
   <button type="button" class="d-none" id="open_dial_a_dev" data-bs-toggle="modal" data-bs-target="#dial_a_dev"></button>
 
@@ -90,22 +90,23 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-            <h4>Dial a Dev</h4>
+          <h4 class='dad-title'>Dial a Dev</h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
-        <div class="modal-body dial-a-dev-body">
+        <div class="modal-body" id="dial_a_dev_body">
 
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Complete</button>
+          <button type="button" class="start-call btn btn-primary"><i class="bi bi-telephone-forward-fill"></i> Dial</button>
+          <button type="button" class="end-call btn btn-danger"><i class="bi bi-telephone-x-fill"></i> End Call</button>
         </div>
       </div>
     </div>
   </div>
 
-  <div id="tta_status" class="modal fade modal-lg">
+  <div id="tta" class="modal fade modal-lg">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -156,14 +157,6 @@
     </div>
   </div>
 
-  <template id="game_row">
-    <tr class="game-row">
-      <td class="game-id">Game 1</td>
-      <td class="game-title">Game Title</td>
-      <td class="game-links"><a class="btn btn-primary" href="">Play</a></td>
-    </tr>
-  </template>
-
   <div id="tta_status" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -204,6 +197,14 @@
     </tr>
   </template>
 
+  <template id="game_row">
+    <tr class="game-row">
+      <td class="game-id">Game 1</td>
+      <td class="game-title">Game Title</td>
+      <td class="game-links"><a class="btn btn-primary" href="">Play</a></td>
+    </tr>
+  </template>
+
   <template id="toast_template">
     <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header">
@@ -229,45 +230,7 @@
         </ul>
       </div>
 
-      <div class="col-sm-7" id="question_section">
-        <div class="row">
-          <div class="row text-center p-2 ">
-            <h1 id="question">What is the meaning of life?</h1>
-          </div>
-        </div>
-
-
-        <div class="row" id="choices_section">
-          <div class="row p-3">
-            <div class="col-sm-6 d-grid">
-              <button class="choice btn btn-secondary">42</button>
-            </div>
-            <div class="col-sm-6 d-grid">
-              <button class="choice btn btn-secondary">To find the TV remote</button>
-            </div>
-          </div>
-
-          <div class="row p-3">
-            <div class="col-sm-6 d-grid">
-              <button class="choice btn btn-secondary">Be Excellent to each other</button>
-            </div>
-            <div class="col-sm-6 d-grid">
-              <button class="choice btn btn-secondary">To Confuse Philosophers</button>
-            </div>
-          </div>
-
-          <div class="row p-3">
-            <div class="col-sm-12 d-grid">
-              <button class="answer btn btn-success" disabled>Answer</button>
-            </div>
-          </div>
-
-          <div class="row p-3">
-            <div class="col-sm-12 d-grid">
-              <button class="ask btn btn-info">Ask Question</button>
-            </div>
-          </div>
-        </div>
+      <div class="col-sm-7 question-section">
       </div>
 
       <div class="col-sm-3" id="helpline_section">
@@ -283,6 +246,47 @@
           <h3>Signup here:</h3>
 
           <img src="img/qrcode.png" alt="vonage" width="100%">
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="question_template">
+    <div class="row">
+      <div class="row text-center p-2 ">
+        <h1 class="question-text">What is the meaning of life?</h1>
+      </div>
+    </div>
+
+
+    <div class="row" id="choices_section">
+      <div class="row p-3">
+        <div class="col-sm-6 d-grid">
+          <button class="choice btn btn-secondary">42</button>
+        </div>
+        <div class="col-sm-6 d-grid">
+          <button class="choice btn btn-secondary">To find the TV remote</button>
+        </div>
+      </div>
+
+      <div class="row p-3">
+        <div class="col-sm-6 d-grid">
+          <button class="choice btn btn-secondary">Be Excellent to each other</button>
+        </div>
+        <div class="col-sm-6 d-grid">
+          <button class="choice btn btn-secondary">To Confuse Philosophers</button>
+        </div>
+      </div>
+
+      <div class="row p-3">
+        <div class="col-sm-12 d-grid">
+          <button class="answer btn btn-success" disabled>Answer</button>
+        </div>
+      </div>
+
+      <div class="row p-3">
+        <div class="col-sm-12 d-grid">
+          <button class="ask btn btn-info">Ask Question</button>
         </div>
       </div>
     </div>
