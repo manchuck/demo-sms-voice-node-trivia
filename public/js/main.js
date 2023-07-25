@@ -159,7 +159,7 @@ const fetchGame = async (gameId) => {
 const passQuestion = async () => {
   console.log('Passing question');
   showSpinner();
-  getChoicesSection().classList.add('d-none');
+  getChoicesSection()?.classList.add('d-none');
   return makeRPCCall('pass').then(displayQuestion);
 };
 
@@ -196,7 +196,7 @@ const makeRPCCall = async (action, parameters = null, id = null) => {
       console.log('RPC Result', rpcResult);
       if (rpcResult.status > 399) {
         console.log('Error');
-        throw new Error(rpcResult.title);
+        throw new Error(rpcResult.detail || rpcResult.title);
       }
 
       window.currentGame = rpcResult.result;
@@ -206,8 +206,10 @@ const makeRPCCall = async (action, parameters = null, id = null) => {
       console.error(error);
       // eslint-disable-next-line
       Toastify({
-        text: 'Failed JSON RPC call',
+        text: `Failed JSON RPC call: ${error.message}`,
         className: 'error',
+        position: 'center',
+        duration: 8000,
       }).showToast();
     })
     .finally(() => {

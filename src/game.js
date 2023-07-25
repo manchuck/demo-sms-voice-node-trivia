@@ -147,11 +147,16 @@ const parseQuestion = (messages, content) => {
 
   saveGame();
 
-  const parsed = parseJson(content);
-  log(parsed);
+  try {
+    const parsed = parseJson(content);
+    log(parsed);
 
-  parsed.correct = parsed.correct.substring(0, 1).toUpperCase();
-  return parsed;
+    parsed.correct = parsed.correct.substring(0, 1).toUpperCase();
+    return parsed;
+  } catch (error) {
+    log('JSON parse Error', error);
+    throw new Error('GPT did not listen and return proper JSON');
+  }
 };
 
 /**
