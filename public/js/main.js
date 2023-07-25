@@ -250,6 +250,7 @@ const confirmChoice = () => {
         selectedChoice?.classList.add('btn-danger');
         return;
       }
+      console.log('Correct Answer');
       getAskButton().classList.remove('d-none');
     });
 };
@@ -325,7 +326,11 @@ const clearQuestion = () => {
 };
 
 const showSpinner = (text) => {
-  getQuestionElement().innerHTML = '';
+  const questionSection = document
+    .querySelector('.question-section');
+
+  questionSection.innerText = '';
+
   const spinnerDiv = document.createElement('div');
   spinnerDiv.classList.add('spinner-border', 'spinner');
 
@@ -335,7 +340,7 @@ const showSpinner = (text) => {
   textSpan.innerText = text ? text : 'Loading';
   spinnerDiv.appendChild(textSpan);
 
-  getQuestionElement().appendChild(spinnerDiv);
+  questionSection.appendChild(spinnerDiv);
   return spinnerDiv;
 };
 
@@ -440,7 +445,27 @@ const playGame = async (gameId) => {
   getGamePlayer().innerText = `Player: ${game?.player?.name || ''}`;
   displayScore();
   displayQuestion();
-  dialADev();
+
+  const { numbers } = getCurrentGame();
+  const numbersElement = document
+    .getElementById('numbers_table')
+    .querySelector('tbody');
+
+  numbersElement.innerHTML = '';
+
+  numbers?.forEach(({ country, number }) => {
+    const row = document.createElement('tr');
+    const countryCell = document.createElement('td');
+    countryCell.innerText = country;
+
+    row.appendChild(countryCell);
+
+    const numberCell = document.createElement('td');
+    numberCell.innerText = number;
+
+    row.appendChild(numberCell);
+    numbersElement.appendChild(row);
+  });
 };
 
 const narrowItDown = () => {
@@ -544,11 +569,6 @@ const startCall = async () => {
   window.app = null;
 };
 
-const textTheAudience = () => {
-  console.log('Text the audience');
-  makeRPCCall('life_line', { which: 'text_the_audience',
-  }).then(pollAudienceStatus);
-};
 
 const findPlayer = async () => {
   console.log('Find Player');
@@ -661,16 +681,26 @@ const handelButtonClickEvent = (event) => {
   }
 };
 
+const textTheAudience = () => {
+  console.log('Text the audience');
+  showAudienceResponses();
+  document.getElementById('open_tta').click();
+  makeRPCCall(
+    'life_line',
+    { which: 'text_the_audience' },
+  ).then(pollAudienceStatus);
+};
+
 const pollAudienceStatus = () => {
   console.log('Polling audience status');
   window.audiencePollId = setInterval(
     () => {
       console.log('Counting status');
-      makeRPCCall('count_answers').then(showAudienceStatus);
+      makeRPCCall('count_answers').then(showAudienceResponses);
     },
     1000,
   );
-  document.getElementById('open_tta').click();
+
   document.getElementById('tta')
     .addEventListener('hide.bs.modal', () => {
       console.log('Modal closing');
@@ -679,58 +709,30 @@ const pollAudienceStatus = () => {
     });
 };
 
-const showAudienceStatus = () => {
-  console.log('Showing status');
-  const { numbers } = getCurrentGame();
-  const { choices } = getLatestQuestion();
-
-  const numbersElement =document
-    .getElementById('numbers_table')
-    .querySelector('tbody');
-
-  numbersElement.innerHTML = '';
-
-  numbers?.forEach(({ country, number }) => {
-    const row = document.createElement('tr');
-    const countryCell = document.createElement('td');
-    countryCell.innerText = country;
-
-    row.appendChild(countryCell);
-
-    const numberCell = document.createElement('td');
-    numberCell.innerText = number;
-
-    row.appendChild(numberCell);
-    numbersElement.appendChild(row);
-  });
+const showAudienceResponses = () => {
+  console.log('Showing responses');
 
   const profileElement = document.getElementById('audience_profiles');
-  profileElement.innerHTML = '';
-  const total = choices.reduce(
-    (acc, { audience_choice: audienceChoice }) => acc + audienceChoice,
-    0,
-  );
+  const questionElement = buildQuestionElement();
 
-  choices.forEach(({ letter, audience_choice: audienceChoice })=> {
-    const span = document.createElement('span');
-    const percent = total > 0
-      ? `${((audienceChoice / total) * 100).toFixed(1)}`
-      : '';
+  questionElement.querySelector('button.ask').classList.add('d-none');
+  questionElement.querySelector('button.answer').classList.add('d-none');
 
-    span.innerText = `${letter} - ${percent}%`;
+  const choices = questionElement.querySelectorAll('button.choice');
 
-    span.classList.add(
-      'border',
-      'border-secondary',
-      'text-secondary',
-      'rounded',
-      'p-1',
-      'm-2',
-      'border-4',
+  // eslint-disable-next-line
+  for (const [index, element] of choices.entries()) {
+    element.classList.remove(
+      'selected-choice',
+      'btn-info',
+      'btn-danger',
+      'btn-success',
+      'choice',
     );
-
-    profileElement.appendChild(span);
-  });
+    element.disabled = true;
+  }
+  profileElement.innerHTML = '';
+  profileElement.appendChild(questionElement);
 };
 
 document.addEventListener('DOMContentLoaded', () => {
