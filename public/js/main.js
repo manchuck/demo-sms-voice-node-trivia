@@ -455,7 +455,7 @@ const dialADev = async () => {
 
   const { dad } = getCurrentGame();
   console.log(dad);
-  document.getElementById('open_call').click();
+  document.getElementById('open_dial_a_dev').click();
 
   console.log(getCallerElement());
   getCallerElement().innerText = dad.name;
@@ -629,7 +629,7 @@ const pollAudienceStatus = () => {
     },
     1000,
   );
-  document.getElementById('open_modal').click();
+  document.getElementById('open_tta').click();
   document.getElementById('tta_status')
     .addEventListener('hide.bs.modal', () => {
       console.log('Modal closing');

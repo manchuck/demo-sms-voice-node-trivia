@@ -37,7 +37,9 @@
 
   <button type="button" class="d-none" id="open_call" data-bs-toggle="modal" data-bs-target="#call"></button>
 
-  <button type="button" class="d-none" id="open_modal" data-bs-toggle="modal" data-bs-target="#tta_status"></button>
+  <button type="button" class="d-none" id="open_tta" data-bs-toggle="modal" data-bs-target="#tta_status"></button>
+
+  <button type="button" class="d-none" id="open_dial_a_dev" data-bs-toggle="modal" data-bs-target="#dial_a_dev"></button>
 
   <section id="game_list_section" class="p-4 container">
     <table class="table">
@@ -84,11 +86,30 @@
 
   </section>
 
+  <div id="dial_a_dev" class="modal fade modal-lg">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4>Dial a Dev</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body dial-a-dev-body">
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Complete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="tta_status" class="modal fade modal-lg">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          Calling
+          <h4>Text the Audience</h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
