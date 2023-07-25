@@ -239,6 +239,7 @@ const confirmChoice = () => {
       console.log('Answer result', res);
       const latestQuestion = getLatestQuestion();
 
+      getAnswerButton().classList.add('d-none');
       const correctChoice = getChoicesSection()
         .querySelector('button.correct');
 
@@ -251,6 +252,8 @@ const confirmChoice = () => {
         return;
       }
       console.log('Correct Answer');
+
+      window.jsConfetti.addConfetti();
       getAskButton().classList.remove('d-none');
     });
 };
@@ -738,6 +741,8 @@ const showAudienceResponses = () => {
 document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const gameId = urlParams.get('playGame');
+
+  window.jsConfetti = new JSConfetti();
 
   document.addEventListener('click', handelButtonClickEvent);
 
