@@ -160,17 +160,6 @@ const parseQuestion = (messages, content) => {
 const ask = async (game) => {
   log('Asking question');
 
-  const questionSchema = {
-    question: 'The text for the string',
-    choices: [
-      {
-        letter: 'The letter choice',
-        text: 'The choice',
-      },
-    ],
-    correct: 'The correct choice',
-  };
-
   const { questions, messages } = game;
   messages.push({
     role: 'user',
@@ -464,6 +453,17 @@ export const createGame = (
 ) => {
   log(`Creating new game ${title}`, categories);
 
+  const questionSchema = {
+    question: 'The text for the string',
+    choices: [
+      {
+        letter: 'The letter choice',
+        text: 'The choice',
+      },
+    ],
+    correct: 'The correct choice',
+  };
+
   const game = fillGame({
     id: makeId(8),
     title: title,
@@ -501,18 +501,24 @@ export const createGame = (
   return game;
 };
 
+const findPlayer = async (game) => {
+  await getAirtableSignups(game);
+
+  log('setting player');
+  game.player = game.particapants.sort(() => 0.5 - Math.random())[0];
+  saveGame();
+  return game;
+};
+
 /**
  * Attach functions to the loaded game
  */
 const fillGame = (game) =>
   Object.assign(game, {
     ask: _.partial(ask, game, game.messages, game.questions),
-    findPlayer: _.partial(getAirtableSignups, game),
+    findPlayer: _.partial(findPlayer, game),
     answer: _.partial(answer, game),
     pass: _.partial(pass, game),
-    phoneADev: _.partial(phoneADev, game),
-    narrowItDown: _.partial(narrowItDown, game),
-    textTheAudience: _.partial(textTheAudience, game),
     latestQuestion: _.partial(getLatestQuestion, game.questions),
     getCorrectChoice: _.partial(getCorrectChoice, game.questions),
     getJwt: _.partial(getJwt, game),

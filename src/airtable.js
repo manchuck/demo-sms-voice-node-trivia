@@ -43,11 +43,6 @@ export const getAirtableSignups = async (game) => {
     });
   }
 
-  if (!game.player) {
-    log('setting player');
-    game.player = game.particapants.sort(() => 0.5 - Math.random())[0];
-  }
-
   // remove the player
   game.particapants = game.particapants.filter(
     ({ phone }) => phone !== game.player.phone,

@@ -7,8 +7,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
   <link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-  <title>Who wants to be a Vonage Millionaire</title>
+  <title>The Vonage Trivia Voyage: Quiz Your Way to the Top!’</title>
 </head>
 
 <body class="d-flex flex-column">
@@ -18,8 +19,8 @@
       <img class="navbar-brand" id="logo" src="img/VonageLogo_Primary_White.png" alt="vonage">
       <ul class="navbar-nav bg-body-tertiary me-auto mb-2 mb-lg-0">
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Controls
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-list"></i>
             </a>
           <ul class="dropdown-menu">
             <li><button class="dropdown-item create-game">Create Game</button></li>
@@ -116,21 +117,19 @@
     </div>
   </div>
 
-  <div id="call" class="modal fade modal-lg">
+  <div id="call" class="modal fade">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-            <h3>Call</h3>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h4>Call: </h4>
+            <h4 id="caller_name"></h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
-        <div class="modal-body">
-          <h4 id="caller_name"></h4>
-        </div>
 
         <div class="modal-footer">
-          <button type="button" class="start-call btn btn-primary"><i class="bi bi-telephone-outbound"></i>Dial</button>
-          <button type="button" class="end-call btn btn-danger">End Call</button>
+          <button type="button" class="start-call btn btn-primary"><i class="bi bi-telephone-forward-fill"></i> Dial</button>
+          <button type="button" class="end-call btn btn-danger"><i class="bi bi-telephone-x-fill"></i> End Call</button>
         </div>
       </div>
     </div>
@@ -257,6 +256,12 @@
           <button class="helpline dad btn btn-light">Dial-a-Dev</button>
           <button class="helpline tta btn btn-light">Text the Audience</button>
           <button class="helpline nid btn btn-light">Narrow it Down</button>
+        </div>
+
+        <div class="col-sm-12 d-grid pt-4 text-center">
+          <h3>Signup here:</h3>
+
+          <img src="img/qrcode.png" alt="vonage" width="100%">
         </div>
       </div>
     </div>

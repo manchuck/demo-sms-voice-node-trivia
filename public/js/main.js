@@ -673,7 +673,7 @@ const showAudienceStatus = () => {
   choices.forEach(({ letter, audience_choice: audienceChoice })=> {
     const span = document.createElement('span');
     const percent = total > 0
-      ? `${((audienceChoice / total) * 100).toFixed(1)}%`
+      ? `${((audienceChoice / total) * 100).toFixed(1)}`
       : '';
 
     span.innerText = `${letter} - ${percent}%`;
