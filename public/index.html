@@ -223,27 +223,34 @@
     </div>
 
     <div class="row">
-      <div class="col-sm-2 text-center">
+      <div class="col-sm-2 text-center" id="score_section">
         <h4>Score</h4>
 
-        <ul id="score_section" class="list-group shadow-lg">
+        <ul id="score_list" class="list-group shadow-lg">
         </ul>
       </div>
 
       <div class="col-sm-7 question-section">
+        <div class="row p-3">
+          <div class="col-sm-12 d-grid">
+            <button class="ask btn btn-info">Ask Question</button>
+          </div>
+        </div>
       </div>
 
-      <div class="col-sm-3" id="helpline_section">
-        <h4 class="text-center">Helplines</h4>
+      <div class="col-sm-3">
+        <div class="col-sm-12 d-grid gap-2 text-center" id="helpline_section">
+          <h4 class="text-center">Helplines</h4>
 
-        <div class="col-sm-12 d-grid gap-2 text-center">
-          <button class="helpline dad btn btn-light">Dial-a-Dev</button>
-          <button class="helpline tta btn btn-light">Text the Audience</button>
-          <button class="helpline nid btn btn-light">Narrow it Down</button>
+          <div class="col-sm-12 d-grid gap-2 text-center">
+            <button class="helpline dad btn btn-light">Dial-a-Dev</button>
+            <button class="helpline tta btn btn-light">Text the Audience</button>
+            <button class="helpline nid btn btn-light">Narrow it Down</button>
+          </div>
         </div>
 
         <div class="col-sm-12 d-grid pt-4 text-center">
-          <h3>Signup here:</h3>
+          <h3>Join here:</h3>
 
           <img src="img/qrcode.png" alt="vonage" width="100%">
         </div>

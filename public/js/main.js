@@ -1,5 +1,23 @@
 const apiHost = `http://${location.host || 'localhost'}`;
 
+const CONFETTI_ARGS = [
+  {},
+  { confettiRadius: 12, confettiNumber: 100 },
+  { emojis: ['🌈', '⚡️', '💥', '✨', '💫', '🌸'] },
+  { emojis: ['⚡️', '💥', '✨', '💫'] },
+  { emojis: ['🦄'], confettiRadius: 100, confettiNumber: 30 },
+  {
+    confettiColors: ['#ffbe0b', '#fb5607', '#ff006e', '#8338ec', '#3a86ff'],
+    confettiRadius: 10,
+    confettiNumber: 150,
+  },
+  {
+    confettiColors: ['#9b5de5', '#f15bb5', '#fee440', '#00bbf9', '#00f5d4'],
+    confettiRadius: 6,
+    confettiNumber: 300,
+  },
+];
+
 const loadGames = async () => {
   console.log('Load Games');
   return fetch(
@@ -147,7 +165,7 @@ const passQuestion = async () => {
 
 const askQuestion = async () => {
   console.log('Asking question');
-  getChoicesSection().classList.add('d-none');
+  getChoicesSection()?.classList.add('d-none');
   showSpinner('Asking question');
   return makeRPCCall('ask').then(displayQuestion);
 };
@@ -253,7 +271,9 @@ const confirmChoice = () => {
       }
       console.log('Correct Answer');
 
-      window.jsConfetti.addConfetti();
+      window.jsConfetti.addConfetti(
+        CONFETTI_ARGS.sort(() => 0.5 - Math.random())[0],
+      );
       getAskButton().classList.remove('d-none');
     });
 };
@@ -268,11 +288,13 @@ const selectChoice = (event) => {
 };
 
 const displayQuestion = () => {
+  console.log('Display question');
   clearQuestion();
-  document.querySelector('.question-section')
-    .appendChild(buildQuestionElement());
-
-  getAskButton().classList.add('d-none');
+  if (getLatestQuestion()) {
+    document.querySelector('.question-section')
+      .appendChild(buildQuestionElement());
+    getAskButton().classList.add('d-none');
+  }
 };
 
 const buildQuestionElement = () => {
@@ -284,6 +306,8 @@ const buildQuestionElement = () => {
     clearQuestion();
     return;
   }
+
+  console.log('We Have a question');
 
   const questionTemplate = document.getElementById('question_template');
   console.log(questionTemplate);
@@ -325,7 +349,8 @@ const buildQuestionElement = () => {
 
 const clearQuestion = () => {
   console.log('Clear Question');
-  document.querySelector('.question-section').innerText = '';
+  const questionSection = document.querySelector('.question-section');
+  questionSection.innerText = '';
 };
 
 const showSpinner = (text) => {
@@ -382,7 +407,7 @@ const getQuestionElement = () => getGameSection()
   .querySelector('#question');
 
 const getScoreSection = () => getGameSection()
-  .querySelector('#score_section');
+  .querySelector('#score_list');
 
 const getChoicesSection = () => getGameSection()
   .querySelector('#choices_section');
@@ -469,6 +494,40 @@ const playGame = async (gameId) => {
     row.appendChild(numberCell);
     numbersElement.appendChild(row);
   });
+
+  if (!game.player) {
+    showNoPlayer();
+    return;
+  }
+};
+
+const resetNoPlayer = () => {
+  document.getElementById('score_section').classList.remove('d-none');
+  document.getElementById('helpline_section').classList.remove('d-none');
+  document.querySelector('.question-section').classList.remove('d-none');
+  const gameRows = document
+    .getElementById('game')
+    .querySelectorAll('.row');
+
+  for (const [index, element] of gameRows.entries()) {
+    element.classList.remove('justify-content-center');
+  }
+};
+
+const showNoPlayer = () => {
+  console.log('No player');
+  document.querySelector('.player-name').innerText = `Please select "Find player" from the menu`;
+  const gameRows = document
+    .getElementById('game')
+    .querySelectorAll('.row');
+
+  for (const [index, element] of gameRows.entries()) {
+    element.classList.add('justify-content-center');
+  }
+
+  document.getElementById('score_section').classList.add('d-none');
+  document.getElementById('helpline_section').classList.add('d-none');
+  document.querySelector('.question-section').classList.add('d-none');
 };
 
 const narrowItDown = () => {
@@ -577,8 +636,9 @@ const findPlayer = async () => {
   console.log('Find Player');
   showSpinner();
   await makeRPCCall('find_player');
-  displayQuestion();
   const game = getCurrentGame();
+  await askQuestion();
+  resetNoPlayer();
   getGamePlayer().innerText = `Player: ${game?.player?.name || ''}`;
 };
 
