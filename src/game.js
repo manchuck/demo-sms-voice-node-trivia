@@ -365,7 +365,7 @@ const processAudienceResponse = async (game, inboundStatus) => {
 
   return vonage.messages.send(new SMS(params))
     .catch((err) => {
-      log(`Error when sending message`, err.response.data);
+      log(`Error when sending message`, err.response?.data);
     });
 };
 
