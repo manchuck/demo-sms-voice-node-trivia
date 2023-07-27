@@ -47,7 +47,7 @@ export const getAirtableSignups = async (game) => {
 
   // remove the player
   game.particapants = game.particapants.filter(
-    ({ phone }) => phone !== game.player.phone,
+    ({ phone }) => phone !== game?.player?.phone,
   );
 
   log('Particapants', game.particapants);

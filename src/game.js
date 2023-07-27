@@ -404,6 +404,10 @@ const countAudienceAnswers = (game) => {
 
   choices.forEach((choice) => {
     const { letter } = choice;
+    if (!counted[game.id]) {
+      return;
+    }
+
     if (counted[game.id][letter]) {
       choice.audience_choice = counted[game.id][letter].size;
     }

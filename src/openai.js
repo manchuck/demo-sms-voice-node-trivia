@@ -6,6 +6,7 @@ dotenv.config();
 
 const log = debug('@vonage.openai');
 
+
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
