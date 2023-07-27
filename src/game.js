@@ -352,7 +352,9 @@ const textTheAudience = async (game) => {
 const processAudienceResponse = async (game, inboundStatus) => {
   const { text, from } = inboundStatus;
 
-  partStream.write(`${game.id},${from},${text}\n`);
+  const letter = `${text}`.trim().substring(0, 1).toUpperCase();
+
+  partStream.write(`${game.id},${from},${letter}\n`);
   const params = {
     from: FROM_NUMBER,
     to: from,
