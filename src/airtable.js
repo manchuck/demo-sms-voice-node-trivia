@@ -1,6 +1,8 @@
+import dotenv from 'dotenv';
 import Airtable from 'airtable';
 import debug from 'debug';
 
+dotenv.config();
 const log = debug('@vonage.game.airtable');
 
 const AT_BASE_ID = process.env.AT_BASE_ID;

@@ -1,5 +1,8 @@
+import dotenv from 'dotenv';
 import { Configuration, OpenAIApi } from 'openai';
 import debug from 'debug';
+
+dotenv.config();
 
 const log = debug('@vonage.openai');
 
