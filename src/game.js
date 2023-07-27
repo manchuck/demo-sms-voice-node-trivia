@@ -1,7 +1,7 @@
 import { callGPT } from './openai.js';
 import _ from 'lodash';
 import path from 'path';
-import { createWriteStream, readFileSync, writeFileSync } from 'fs';
+import { existsSync, createWriteStream, readFileSync, writeFileSync } from 'fs';
 import debug from 'debug';
 import parseJson from 'json-parse-better-errors';
 import { Vonage } from '@vonage/server-sdk';
@@ -9,14 +9,21 @@ import { SMS } from '@vonage/messages';
 import { Auth } from '@vonage/auth';
 import { tokenGenerate } from '@vonage/jwt';
 import { getAirtableSignups } from './airtable.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const log = debug('@vonage.game.engine');
+
+const privateKey = existsSync(process.env.VONAGE_PRIVATE_KEY)
+  ? readFileSync(process.env.VONAGE_PRIVATE_KEY)
+  : process.env.VONAGE_PRIVATE_KEY;
 
 const APIAuth = new Auth({
   apiKey: process.env.VONAGE_API_KEY,
   apiSecret: process.env.VONAGE_API_SECRET,
   applicationId: process.env.VONAGE_APPLICATION_ID,
-  privateKey: process.env.VONAGE_PRIVATE_KEY,
+  privateKey: privateKey,
 });
 
 const FROM_NUMBER = process.env.FROM_NUMBER;
@@ -259,7 +266,7 @@ const answer = async (game, { letterChoice }) => {
 const getJwt = (game) => {
   game.jwt = tokenGenerate(
     process.env.VONAGE_APPLICATION_ID,
-    process.env.VONAGE_PRIVATE_KEY,
+    privateKey,
     {
       sub: 'game_user',
       acl: {

@@ -543,7 +543,7 @@ const setupPhoneCall = async (calling) => {
   const { jwt } = getCurrentGame();
   getCallerElement().innerText = calling.name;
   // eslint-disable-next-line
-  window.app = await new NexmoClient()
+  window.app = await new NexmoClient({ debug: true})
     .createSession(jwt);
 
   window.calling = calling;
