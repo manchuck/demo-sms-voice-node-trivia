@@ -14,7 +14,7 @@ const rootDir = path.dirname(path.dirname(import.meta.url)).replace(
 );
 
 const app = new Express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || process.env.NERU_APP_PORT || 3000;
 
 const catchAsync = (fn) => (req, res, next) => {
   fn(req, res, next).catch(next);
@@ -22,6 +22,10 @@ const catchAsync = (fn) => (req, res, next) => {
 
 app.use(Express.static(rootDir + '/public'));
 app.use(Express.json());
+
+app.get('/_/health', (req, res) => {
+  res.status(200);
+});
 
 /**
  * Return the home page
