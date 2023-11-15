@@ -478,20 +478,27 @@ const playGame = async (gameId) => {
 
   const { numbers } = getCurrentGame();
   const numbersElement = document
-    .getElementById('numbers_table')
-    .querySelector('tbody');
+    .getElementById('numbers_table');
 
   numbersElement.innerHTML = '';
 
   numbers?.forEach(({ country, number }) => {
-    const row = document.createElement('tr');
-    const countryCell = document.createElement('td');
+    const row = document.createElement('div');
+    const countryCell = document.createElement('div');
     countryCell.innerText = country;
 
     row.appendChild(countryCell);
 
-    const numberCell = document.createElement('td');
-    numberCell.innerText = number;
+    const numberCell = document.createElement('div');
+    const qrcode = new QRCode(
+      numberCell,
+      {
+        height: 100,
+        width: 100,
+      },
+    );
+    qrcode.makeCode(`sms:${number}`);
+    numberCell.append(number);
 
     row.appendChild(numberCell);
     numbersElement.appendChild(row);

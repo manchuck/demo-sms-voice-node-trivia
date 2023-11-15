@@ -51,3 +51,14 @@ footer {
 .modal-title {
     color: black;
 }
+
+#numbers_table {
+    display: flex;
+    justify-content: center;
+}
+
+#numbers_table div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
