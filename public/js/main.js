@@ -7,7 +7,7 @@ const CONFETTI_ARGS = [
   { emojis: ['⚡️', '💥', '✨', '💫'] },
   { emojis: ['🦄'], confettiRadius: 100, confettiNumber: 30 },
   {
-    confettiColors: ['#ffbe0b', '#fb5607', '#ff006e', '#8338ec', '#3a86ff'],
+    confettiColors: ['#ffbe0L', '#fb5607', '#ff006e', '#8338ec', '#3a86ff'],
     confettiRadius: 10,
     confettiNumber: 150,
   },
@@ -480,6 +480,11 @@ const playGame = async (gameId) => {
   const numbersElement = document
     .getElementById('numbers_table');
 
+  const numberCell = document.getElementById('join_here');
+  const qrcode = new QRCode(
+    numberCell,
+  );
+  qrcode.makeCode('https://airtable.com/apprT3ianGAMilmoh/shrtZEEIkzPV2Q2Be');
   numbersElement.innerHTML = '';
 
   numbers?.forEach(({ country, number }) => {
