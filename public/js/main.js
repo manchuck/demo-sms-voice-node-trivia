@@ -487,10 +487,10 @@ const playGame = async (gameId) => {
   qrcode.makeCode('https://airtable.com/apprT3ianGAMilmoh/shr03tlR2ZCHcFmYA');
   numbersElement.innerHTML = '';
 
-  numbers?.forEach(({ country, number }) => {
+  numbers?.forEach(({ countryName, country, number }) => {
     const row = document.createElement('div');
     const countryCell = document.createElement('div');
-    countryCell.innerText = country;
+    countryCell.innerText = countryName || country;
 
     row.appendChild(countryCell);
 

@@ -38,6 +38,7 @@ const gameFileName = rootDir + '/games.json';
 const particapantFileName = rootDir + '/particapants.txt';
 
 const partStream = createWriteStream(particapantFileName, { flags: 'a' });
+const allowedLetters = ['A', 'B', 'C', 'D'];
 
 /**
  * Close all open file streams
@@ -54,6 +55,8 @@ process.on('SIGTERM', closeFiles);
 
 /**
  * Load games from the file
+ *
+ * @return {Object} The games
  */
 const loadGame = () => {
   log(`Loading games file: ${gameFileName}`);
@@ -78,6 +81,9 @@ const saveGame = () => {
 
 /**
  * Get the phone numbers linked to the vonage application
+ *
+ * @param {Object} game The gam
+ * @return {Object} The numbers
  */
 const getGameNumbers = async (game) => {
   const numbers = await vonage.numbers.getOwnedNumbers({
@@ -85,11 +91,19 @@ const getGameNumbers = async (game) => {
   });
 
   log(numbers);
-  game.numbers = numbers?.numbers.map(
-    ({ country, msisdn }) => ({
-      country: country,
-      number: msisdn,
-    }),
+  game.numbers =await Promise.all(
+    numbers?.numbers.map(
+      ({ country, msisdn }) => vonage.numberInsights.basicLookup(msisdn)
+      // eslint-disable-next-line
+        .then(({ country_name, country_prefix, national_format_number }) => ({
+          country: country,
+          // eslint-disable-next-line
+          countryName: country_name,
+          msisdn: msisdn,
+          // eslint-disable-next-line
+          number: `+${country_prefix} ${national_format_number}`,
+        })),
+    ),
   );
 
   return numbers;
@@ -97,6 +111,9 @@ const getGameNumbers = async (game) => {
 
 /**
  * Update the Inbound and Status URL's for the application
+ *
+ * @param {String} gameId The game ID
+ * @return {Promise} The promise
  */
 const updateGameUrls = async (gameId) => {
   log(`Updating app for game ${gameId}`);
@@ -127,6 +144,9 @@ const updateGameUrls = async (gameId) => {
 
 /**
  * Create an ID
+ *
+ * @param {Number} length The length of the ID
+ * @return {String} The ID
  */
 const makeId = (length) => {
   let result = '';
@@ -140,11 +160,18 @@ const makeId = (length) => {
 
 /**
  * Returns the current question for the game
+ *
+ * @param {Array} questions The questions
+ * @return {Object} The current question
  */
 const getCurrentQuestion = (questions) => questions.slice(-1)[0];
 
 /**
  * (Try to) parse the response from GPT
+ *
+ * @param {Array} messages The messages
+ * @param {String} content The content
+ * @return {Object} The parsed question
  */
 const parseQuestion = (messages, content) => {
   messages.push({
@@ -168,6 +195,9 @@ const parseQuestion = (messages, content) => {
 
 /**
  * Ask a question for the game
+ *
+ * @param {Object} game The game
+ * @return {Object} The question
  */
 const ask = async (game) => {
   log('Asking question');
@@ -202,6 +232,9 @@ const ask = async (game) => {
 
 /**
  * Pass the last question answered
+ *
+ * @param {Object} game The game
+ * @return {Object} The next question
  */
 const pass = async (game) => {
   log('Passing question');
@@ -214,6 +247,8 @@ const pass = async (game) => {
 
 /**
  * Calculate the score
+ *
+ * @param {Object} game The game
  */
 const calculateScore = (game) => {
   log('Calculating score');
@@ -242,6 +277,9 @@ const calculateScore = (game) => {
 
 /**
  * Answer the question
+ *
+ * @param {Object} game The game
+ * @param {Object} letterChoice The letter choice
  */
 const answer = async (game, { letterChoice }) => {
   log(`Answering question: ${letterChoice}`);
@@ -262,6 +300,8 @@ const answer = async (game, { letterChoice }) => {
 
 /**
  * Generate a JWT token for the game
+ *
+ * @param {Object} game The game
  */
 const getJwt = (game) => {
   game.jwt = tokenGenerate(
@@ -290,6 +330,8 @@ const getJwt = (game) => {
 
 /**
  * Choose a dev to phone
+ *
+ * @param {Object} game The game
  */
 const phoneADev = async (game) => {
   log('Phone a friend', game);
@@ -303,6 +345,8 @@ const phoneADev = async (game) => {
 
 /**
  * Reduce choices down
+ *
+ * @param {Object} game The game
  */
 const narrowItDown = async (game) => {
   log('Fifity Fifity');
@@ -334,6 +378,8 @@ const narrowItDown = async (game) => {
 
 /**
  * Setup application to receive texts
+ * @param {Object} game The game
+ * @return {Object} The game
  */
 const textTheAudience = async (game) => {
   log('Text The Audience', game);
@@ -348,17 +394,33 @@ const textTheAudience = async (game) => {
 
 /**
  * Write sms messages to a file
+ *
+ * @param {Object} game The game
+ * @param {Object} inboundStatus The inbound status
+ * @return {Promise} The promise
  */
 const processAudienceResponse = async (game, inboundStatus) => {
   const { text, from } = inboundStatus;
 
+  let response = `Thanks for helping ${game?.player?.name || ''}`;
+  if (text.trim().length !== 1) {
+    response = 'I\'m sorry, I didn\'t understand your message. '
+    + ' Please respond with a single letter choice.';
+  }
+
   const letter = `${text}`.trim().substring(0, 1).toUpperCase();
 
+  if (!allowedLetters.includes(letter)) {
+    response = `I'm sorry but '${letter}' is not a valid choice. `
+    + `Please respond with ${allowedLetters.join(', ')}.`;
+  }
+
   partStream.write(`${game.id},${from},${letter}\n`);
+
   const params = {
     from: FROM_NUMBER,
     to: from,
-    text: `Thanks for helping ${game?.player?.name || ''}`,
+    text: response,
   };
 
   log('Sending message', params);
@@ -371,6 +433,9 @@ const processAudienceResponse = async (game, inboundStatus) => {
 
 /**
  * Parse the SMS file
+ *
+ * @param {Object} game The game
+ * @return {Object} The game
  */
 const countAudienceAnswers = (game) => {
   log(game);
@@ -462,8 +527,15 @@ export const pointScale = [
 
 /**
  * Setup a game
+ *
+ * @param {String} title The title of the game
+ * @param {Array} categories The categories for the game
+ * @param {Array} questions The questions for the game
+ * @param {Array} messages The messages for the game
+ *
+ * @return {Object} The game
  */
-export const createGame = (
+export const createGame = async (
   title,
   categories,
   questions = [],
@@ -500,6 +572,7 @@ export const createGame = (
     },
   });
 
+  await getGameNumbers(game);
   messages.push({
     role: 'system',
     content:
@@ -530,6 +603,10 @@ const findPlayer = async (game) => {
 
 /**
  * Attach functions to the loaded game
+ *
+ * @param {Object} game The game
+ *
+ * @return {Object} The game with functions attached
  */
 const fillGame = (game) =>
   Object.assign(game, {
@@ -547,6 +624,9 @@ const fillGame = (game) =>
 
 /**
  * Fetch a game
+ *
+ * @param {String} gameId The game ID
+ * @return {Object} The game
  */
 export const getGame = (gameId) => {
   if (!games[gameId]) {
@@ -558,5 +638,7 @@ export const getGame = (gameId) => {
 
 /**
  * Return all the games
+ *
+ * @return {Array} The games
  */
 export const getAllGames = () => games;

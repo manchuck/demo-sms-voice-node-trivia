@@ -52,6 +52,10 @@ footer {
     color: black;
 }
 
+.tta_info {
+    text-align: center;
+}
+
 #numbers_table {
     display: flex;
     justify-content: center;
@@ -61,4 +65,12 @@ footer {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    margin: 5px;
+    text-align: center;
+}
+
+#numbers_table div div img {
+    height: 100px;
+    width: 100px;
 }

@@ -23,9 +23,10 @@ export const callGPT = async (
 
     const chatCompletion = await openai.chat.completions.create(
       {
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-3.5-turbo-0125',
         temperature: 1.5,
         messages: messages,
+        response_format: { type: 'json_object' },
       },
       {
         timeout: timeout,

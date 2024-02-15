@@ -52,7 +52,7 @@ app.post('/games', catchAsync(async (req, res) => {
   const { title, categories } = req.body;
   log(`Create game`);
 
-  const game = createGame(title, categories);
+  const game = await createGame(title, categories);
   log('Created game', game);
 
   res.send(game);
