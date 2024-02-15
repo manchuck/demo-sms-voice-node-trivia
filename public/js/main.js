@@ -484,7 +484,7 @@ const playGame = async (gameId) => {
   const qrcode = new QRCode(
     numberCell,
   );
-  qrcode.makeCode('https://airtable.com/apprT3ianGAMilmoh/shrtZEEIkzPV2Q2Be');
+  qrcode.makeCode('https://airtable.com/apprT3ianGAMilmoh/shr03tlR2ZCHcFmYA');
   numbersElement.innerHTML = '';
 
   numbers?.forEach(({ country, number }) => {
